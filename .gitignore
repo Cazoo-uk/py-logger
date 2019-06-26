@@ -1,0 +1,17 @@
+.egg-info
+.ropeproject
+__pycache__
+site-packages
+*.swp
+env
+*.egg-info
+.idea
+*.log
+*config.yaml
+build/
+dist/
+api_logs/
+.DS_Store
+docker-files/base/root/opt
+.venv
+src/src
