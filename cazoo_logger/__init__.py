@@ -145,3 +145,6 @@ def config(stream=None):
     console.setFormatter(JsonFormatter())
     logging.root.addHandler(console)
     logging.root.setLevel(logging.DEBUG)
+
+def empty():
+    return ContextualAdapter(logging.root, ChainMap())

@@ -2,7 +2,7 @@ import json
 import logging
 from io import StringIO
 
-from cazoo_logger import config, SnsContext, CloudwatchContext
+import cazoo_logger
 
 
 class LambdaContext(object):
@@ -23,9 +23,9 @@ class LambdaContext(object):
 def test_data():
 
     stream = StringIO()
-    config(stream)
+    cazoo_logger.config(stream)
 
-    logger = SnsContext({}, LambdaContext(), logging.getLogger())
+    logger = cazoo_logger.empty()
     logger.with_data(
         sql={"query": "select * from foo where bar = ?", "parameters": [123]}
     ).info("Hello world")
@@ -38,9 +38,9 @@ def test_data():
 
 def test_exceptions():
     stream = StringIO()
-    config(stream)
+    cazoo_logger.config(stream)
 
-    logger = SnsContext({}, LambdaContext(), logging.getLogger())
+    logger = cazoo_logger.empty()
 
     try:
         raise ValueError("What even IS that??")
@@ -53,36 +53,3 @@ def test_exceptions():
     assert result["data"]["error"]["message"] == "What even IS that??"
 
     assert result["msg"] == "Uh oh"
-
-
-def test_cloudwatch_context():
-
-    stream = StringIO()
-    config(stream)
-
-    request_id = "abc-123"
-    function_name = "bestest-ever-function"
-    function_version = "brand-new"
-
-    ctx = LambdaContext(request_id, function_name, function_version)
-    event = {
-        "account": "123456789012",
-        "region": "us-east-2",
-        "detail": {},
-        "detail-type": "Scheduled Event",
-        "source": "aws.events",
-        "time": "2019-03-01T01:23:45Z",
-        "id": "cdc73f9d-aea9-11e3-9d5a-835b769c0d9c",
-        "resources": ["arn:aws:events:us-east-1:123456789012:rule/my-schedule"],
-    }
-
-    log = CloudwatchContext(event, ctx, logging.getLogger())
-    log.info("hello world")
-
-    result = json.loads(stream.getvalue())
-
-    assert result["context"] == {
-        "request_id": request_id,
-        "function": {"name": function_name, "version": function_version},
-        "event": {"source": "aws.events", "name": "Scheduled Event", "id": event["id"]},
-    }
