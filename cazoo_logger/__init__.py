@@ -28,12 +28,6 @@ class JsonFormatter(logging.Formatter):
         datefmt = kwargs.pop("datefmt", None)
 
         super(JsonFormatter, self).__init__(datefmt=datefmt)
-        self.format_dict = {
-            "timestamp": "%(asctime)s",
-            "level": "%(levelname)s",
-            "location": "%(name)s.%(funcName)s:%(lineno)d",
-        }
-        self.format_dict.update(kwargs)
         self.default_json_formatter = kwargs.pop("json_default", json_formatter)
 
         self._supported = {"msg", "level", "context", "data"}
@@ -145,6 +139,7 @@ def config(stream=None):
     console.setFormatter(JsonFormatter())
     logging.root.addHandler(console)
     logging.root.setLevel(logging.DEBUG)
+
 
 def empty():
     return ContextualAdapter(logging.root, ChainMap())
