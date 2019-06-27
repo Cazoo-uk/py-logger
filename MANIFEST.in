@@ -1,0 +1,2 @@
+include versioneer.py
+include cazoo_logger/_version.py
