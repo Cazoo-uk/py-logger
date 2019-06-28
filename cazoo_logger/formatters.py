@@ -50,5 +50,3 @@ class JsonFormatter(logging.Formatter):
             json_record = json_record.decode("utf-8")
 
         return json_record
-
-

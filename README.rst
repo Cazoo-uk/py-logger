@@ -3,6 +3,8 @@ Intro, in which opinions are had
 
 Cazoo-Logger is a deeply opinionated structured logger for Python on AWS Lambda, intended as a stopgap for those poor recalcitrant souls who persist in writing Python instead of GETTING WITH THE GOD DAMNED PROGRAMME and writing Typescript, thereby benefitting from the glory of the One True Logging Library, `cazoo logger`_.
 
+Cazoo-Logger owes a debt to `aws_lambda_logger`_ which is both less opinionated, and probaby better suited to your particular use-case than this library. Go check it out.
+
 Basic Usage
 -----------
 
@@ -16,7 +18,7 @@ By default this configures the root logger at INFO level, writing to a special J
 To obtain a logger instance, call the appropriate Context function with your incoming event and context:
 
 >>> def handler(event, context):
-...     logger = cazoo_logger.forSnsContext(event, context)
+...     logger = cazoo_logger.s3(event, context)
 ...     logger.info('sup?')
 ...
 
@@ -82,3 +84,4 @@ Similarly you might want to add more data to the context section of your log eve
 {"msg": "handling request", "context": {"request_id": "abc-123"}}
 
 .. _cazoo logger: https://www.npmjs.com/package/cazoo-logger
+.. _aws_lambda_logger: https://pypi.org/project/aws-lambda-logging

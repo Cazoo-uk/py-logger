@@ -7,12 +7,8 @@ from collections import ChainMap
 __version__ = get_versions()["version"]
 del get_versions
 
-__all__ = [
-    'empty',
-    's3',
-    'cloudwatch',
-    'config'
-]
+__all__ = ["empty", "s3", "cloudwatch", "config"]
+
 
 def s3(event, context):
     """
@@ -34,9 +30,9 @@ def config(stream=None, level=logging.INFO, boto_level=logging.WARN):
     stdout.setFormatter(JsonFormatter())
     logging.root.setLevel(level)
     logging.root.addHandler(stdout)
-    logging.getLogger('boto').setLevel(boto_level)
-    logging.getLogger('botocore').setLevel(boto_level)
-    logging.getLogger('boto3').setLevel(boto_level)
+    logging.getLogger("boto").setLevel(boto_level)
+    logging.getLogger("botocore").setLevel(boto_level)
+    logging.getLogger("boto3").setLevel(boto_level)
 
 
 def empty():
