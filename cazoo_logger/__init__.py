@@ -144,6 +144,8 @@ def config(stream=None):
 def empty():
     return ContextualAdapter(logging.root, ChainMap())
 
+
 from ._version import get_versions
-__version__ = get_versions()['version']
+
+__version__ = get_versions()["version"]
 del get_versions
