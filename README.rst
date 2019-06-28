@@ -65,11 +65,11 @@ You might want to include additional structured data in your logs. Any values yo
 
 You can also use the `with_data` method. This method returns a new logger instance with the data section pre-populated.
 
-    >>> new_logger = logger.with_data(sql={'query': 'select * from foo where bar = ?', 'parameters':[234]})
-    >>> new_logger.debug('doin a query')
-    {"msg": "doin a query", "data": {"sql": {"query": "select * from foo where bar = ?", "parameters": [234]}}}
-    >>> new_logger.error('oh noes! the query did not work!')
-    {"msg": "oh noes! the query did not work!", "data": {"sql": {"query": "select * from foo where bar = ?", "parameters": [234]}}}
+>>> new_logger = logger.with_data(sql={'query': 'select * from foo where bar = ?', 'parameters':[234]})
+>>> new_logger.debug('doin a query')
+{"msg": "doin a query", "data": {"sql": {"query": "select * from foo where bar = ?", "parameters": [234]}}}
+>>> new_logger.error('oh noes! the query did not work!')
+{"msg": "oh noes! the query did not work!", "data": {"sql": {"query": "select * from foo where bar = ?", "parameters": [234]}}}
 
 
 Logging additional context
