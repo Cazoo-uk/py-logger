@@ -2,7 +2,7 @@ import json
 import logging
 from io import StringIO
 
-from cazoo_logger import config, SnsContext, CloudwatchContext
+import cazoo_logger
 from . import LambdaContext
 
 event = {
@@ -32,17 +32,16 @@ event = {
 def test_basic_fields():
 
     stream = StringIO()
-    config(stream)
+    cazoo_logger.config(stream=stream)
 
     ctx = LambdaContext(
         request_id="abc123", function_name="do-things", function_version="0.1.2.3"
     )
 
-    logger = SnsContext(event, ctx, logging.getLogger())
+    logger = cazoo_logger.s3(event, ctx)
     logger.info("Hello world")
 
     result = json.loads(stream.getvalue())
-    print(stream.getvalue())
 
     assert result == {
         "msg": "Hello world",

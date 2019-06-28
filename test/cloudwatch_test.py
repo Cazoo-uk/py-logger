@@ -2,14 +2,14 @@ import json
 import logging
 from io import StringIO
 
-from cazoo_logger import config, SnsContext, CloudwatchContext
+import cazoo_logger
 from . import LambdaContext
 
 
 def test_cloudwatch_context():
 
     stream = StringIO()
-    config(stream)
+    cazoo_logger.config(stream)
 
     request_id = "abc-123"
     function_name = "bestest-ever-function"
@@ -27,7 +27,7 @@ def test_cloudwatch_context():
         "resources": ["arn:aws:events:us-east-1:123456789012:rule/my-schedule"],
     }
 
-    log = CloudwatchContext(event, ctx, logging.getLogger())
+    log = cazoo_logger.cloudwatch(event, ctx)
     log.info("hello world")
 
     result = json.loads(stream.getvalue())
