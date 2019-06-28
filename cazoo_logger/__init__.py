@@ -23,7 +23,7 @@ def s3(event, context):
 
 def cloudwatch(event, context):
     """
-    Build a contextual logger for an S3 SNS notification.
+    Build a contextual logger for a Cloudwatch event
     """
     return contexts.CloudwatchContext(event, context, logging.root)
 
@@ -40,4 +40,7 @@ def config(stream=None, level=logging.INFO, boto_level=logging.WARN):
 
 
 def empty():
+    """
+    Return an empty logger, for use in unit tests or non-lambda envs.
+    """
     return contexts.ContextualAdapter(logging.root, ChainMap())
