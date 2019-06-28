@@ -22,19 +22,21 @@ To obtain a logger instance, call the appropriate Context function with your inc
 
 This will result in well-formatted json messages with a documented schema.
 
-    {
-        "msg": "sup?",
-        "context": {
-            "request_id": "abc123",
-            "function": {"name": "do-things", "version": "0.1.2.3"},
-            "sns": {
-                "id": "66591d01-0241-5751-bb17-586e5a6dcf91",
-                "topic": "arn:aws:sns:us-east-1:12345678912:bucket-o-stuff",
-                "type": "Notification",
-                "subject": "Amazon S3 Notification",
-            },
-        }
-    }
+::
+
+  {
+      "msg": "sup?",
+      "context": {
+          "request_id": "abc123",
+          "function": {"name": "do-things", "version": "0.1.2.3"},
+          "sns": {
+              "id": "66591d01-0241-5751-bb17-586e5a6dcf91",
+              "topic": "arn:aws:sns:us-east-1:12345678912:bucket-o-stuff",
+              "type": "Notification",
+              "subject": "Amazon S3 Notification",
+          },
+      }
+  }
 
 If you don't have an AWS context and event, you can construct a logger with no context
 
