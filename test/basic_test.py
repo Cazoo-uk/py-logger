@@ -20,6 +20,17 @@ class LambdaContext(object):
         return None
 
 
+def test_standard_interpolation():
+    stream = StringIO()
+    cazoo_logger.config(stream)
+
+    logger = cazoo_logger.empty()
+    logger.info("Hello %s today is a %s day", "world", "good")
+    result = json.loads(stream.getvalue())
+
+    assert result["msg"] == "Hello world today is a good day"
+
+
 def test_data():
 
     stream = StringIO()

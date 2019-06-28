@@ -30,13 +30,14 @@ class JsonFormatter(logging.Formatter):
         super(JsonFormatter, self).__init__(datefmt=datefmt)
         self.default_json_formatter = kwargs.pop("json_default", json_formatter)
 
-        self._supported = {"msg", "level", "context", "data"}
+        self._supported = {"level", "context", "data"}
 
     def format(self, record):
         record_dict = record.__dict__.copy()
         record_dict["asctime"] = self.formatTime(record, self.datefmt)
 
         log_dict = {k: v for k, v in record_dict.items() if k in self._supported and v}
+        log_dict["msg"] = record.getMessage()
 
         if record.exc_info:
             exc_type, exc, exc_info = record.exc_info
