@@ -29,6 +29,7 @@ def config(stream=None, level=logging.INFO, boto_level=logging.WARN):
     stdout.setLevel(level)
     stdout.setFormatter(JsonFormatter())
     logging.root.setLevel(level)
+    logging.root.handlers.clear()
     logging.root.addHandler(stdout)
     logging.getLogger("boto").setLevel(boto_level)
     logging.getLogger("botocore").setLevel(boto_level)
