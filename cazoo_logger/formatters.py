@@ -30,6 +30,7 @@ class JsonFormatter(logging.Formatter):
 
         log_dict = {k: v for k, v in record_dict.items() if k in self._supported and v}
         log_dict["msg"] = record.getMessage()
+        log_dict["level"] = record.levelname.lower()
 
         if record.exc_info:
             exc_type, exc, exc_info = record.exc_info

@@ -71,6 +71,7 @@ def test_exceptions():
 
     result = json.loads(stream.getvalue())
 
+    assert result["level"] == "error"
     assert result["data"]["error"]["name"] == "ValueError"
     assert result["data"]["error"]["message"] == "What even IS that??"
 

@@ -45,6 +45,7 @@ def test_basic_fields():
 
     assert result == {
         "msg": "Hello world",
+        "level": "info",
         "context": {
             "request_id": "abc123",
             "function": {"name": "do-things", "version": "0.1.2.3"},
