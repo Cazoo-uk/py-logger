@@ -31,6 +31,17 @@ def test_standard_interpolation():
     assert result["msg"] == "Hello world today is a good day"
 
 
+def test_type():
+    stream = StringIO()
+    cazoo_logger.config(stream)
+
+    logger = cazoo_logger.empty()
+    logger.info("hello", type='thing-happened')
+    result = json.loads(stream.getvalue())
+
+    assert result["type"] == "thing-happened"
+
+
 def test_data():
 
     stream = StringIO()

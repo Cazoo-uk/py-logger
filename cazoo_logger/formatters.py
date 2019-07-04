@@ -22,7 +22,7 @@ class JsonFormatter(logging.Formatter):
         super(JsonFormatter, self).__init__(datefmt=datefmt)
         self.default_json_formatter = kwargs.pop("json_default", json_formatter)
 
-        self._supported = {"level", "context", "data"}
+        self._supported = {"level", "context", "data", "type"}
 
     def format(self, record):
         record_dict = record.__dict__.copy()

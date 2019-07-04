@@ -26,6 +26,9 @@ class ContextualAdapter(logging.LoggerAdapter):
         else:
             kwargs["extra"] = self.context
 
+        if "type" in kwargs:
+            kwargs["extra"]["type"] = kwargs.pop("type")
+
         return msg, kwargs
 
 
