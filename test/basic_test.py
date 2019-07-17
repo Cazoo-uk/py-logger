@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 from io import StringIO
@@ -36,7 +37,7 @@ def test_type():
     cazoo_logger.config(stream)
 
     logger = cazoo_logger.empty()
-    logger.info("hello", type='thing-happened')
+    logger.info("hello", type="thing-happened")
     result = json.loads(stream.getvalue())
 
     assert result["type"] == "thing-happened"

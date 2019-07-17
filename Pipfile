@@ -11,6 +11,7 @@ black = "*"
 testfixtures = "*"
 cazoo-logger = {editable = true,path = "."}
 versioneer = "*"
+twin = "*"
 
 [requires]
 python_version = "3.7"

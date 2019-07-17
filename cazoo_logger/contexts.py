@@ -33,7 +33,7 @@ class ContextualAdapter(logging.LoggerAdapter):
 
 
 class LambdaContext(ContextualAdapter):
-    def __init__(self, context, data, logger):
+    def __init__(self, context, data, logger, service=None):
         default = {
             "context": {
                 "request_id": context.aws_request_id,
@@ -43,12 +43,14 @@ class LambdaContext(ContextualAdapter):
                 },
             }
         }
+        if service is not None:
+            default["context"]["function"]["service"] = service
         default["context"].update(data)
         super().__init__(logger, ChainMap(default))
 
 
 class S3SnsContext(LambdaContext):
-    def __init__(self, event, context, logger):
+    def __init__(self, event, context, logger, service=None):
         [record] = event["Records"]
         super().__init__(
             context,
@@ -61,11 +63,12 @@ class S3SnsContext(LambdaContext):
                 }
             },
             logger,
+            service,
         )
 
 
 class CloudwatchContext(LambdaContext):
-    def __init__(self, event, context, logger):
+    def __init__(self, event, context, logger, service=None):
         super().__init__(
             context,
             {
@@ -76,4 +79,5 @@ class CloudwatchContext(LambdaContext):
                 }
             },
             logger,
+            service,
         )
