@@ -38,7 +38,7 @@ def test_basic_fields():
         request_id="abc123", function_name="do-things", function_version="0.1.2.3"
     )
 
-    logger = cazoo_logger.s3(event, ctx)
+    logger = cazoo_logger.s3(event, ctx, "my-service")
     logger.info("Hello world")
 
     result = json.loads(stream.getvalue())
@@ -48,7 +48,7 @@ def test_basic_fields():
         "level": "info",
         "context": {
             "request_id": "abc123",
-            "function": {"name": "do-things", "version": "0.1.2.3"},
+            "function": {"name": "do-things", "version": "0.1.2.3", "service": "my-service"},
             "sns": {
                 "id": "66591d01-0241-5751-bb17-486e5a6dcf91",
                 "topic": "arn:aws:sns:eu-west-1:476912836688:sftp_drop_topic",

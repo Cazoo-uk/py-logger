@@ -10,18 +10,18 @@ del get_versions
 __all__ = ["empty", "s3", "cloudwatch", "config"]
 
 
-def s3(event, context):
+def s3(event, context, service=None):
     """
     Build a contextual logger for an S3 SNS notification.
     """
-    return contexts.S3SnsContext(event, context, logging.root)
+    return contexts.S3SnsContext(event, context, logging.root, service)
 
 
-def cloudwatch(event, context):
+def cloudwatch(event, context, service=None):
     """
     Build a contextual logger for a Cloudwatch event
     """
-    return contexts.CloudwatchContext(event, context, logging.root)
+    return contexts.CloudwatchContext(event, context, logging.root, service)
 
 
 def config(stream=None, level=logging.INFO, boto_level=logging.WARN):
