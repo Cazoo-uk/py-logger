@@ -27,14 +27,14 @@ def test_cloudwatch_context():
         "resources": ["arn:aws:events:us-east-1:123456789012:rule/my-schedule"],
     }
 
-    log = cazoo_logger.cloudwatch(event, ctx)
+    log = cazoo_logger.cloudwatch(event, ctx, service="best-service-ever")
     log.info("hello world")
 
     result = json.loads(stream.getvalue())
 
     assert result["context"] == {
         "request_id": request_id,
-        "function": {"name": function_name, "version": function_version},
+        "function": {"name": function_name, "version": function_version, "service": "best-service-ever"},
         "event": {"source": "aws.events", "name": "Scheduled Event", "id": event["id"]},
     }
 
