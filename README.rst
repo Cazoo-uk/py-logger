@@ -15,10 +15,10 @@ The Cazoo Logger module exposes a single function `config` that sets up the logg
 
 By default this configures the root logger at INFO level, writing to a special JSON formatter.
 
-To obtain a logger instance, call the appropriate Context function with your incoming event and context:
+To obtain a logger instance, call the appropriate fromContext function with your incoming event and context:
 
 >>> def handler(event, context):
-...     logger = cazoo_logger.s3(event, context)
+...     logger = cazoo_logger.fromContext(event, context)
 ...     logger.info('sup?')
 ...
 
