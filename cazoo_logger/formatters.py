@@ -3,7 +3,7 @@ import logging
 
 
 def json_formatter(obj):
-    "request_id"
+    """request_id"""
     return str(obj)
 
 

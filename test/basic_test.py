@@ -1,9 +1,9 @@
-import os
 import json
 import logging
 from io import StringIO
 
 import cazoo_logger
+from cazoo_logger import add_logging_level
 
 
 class LambdaContext(object):
@@ -77,3 +77,42 @@ def test_exceptions():
     assert result["data"]["error"]["message"] == "What even IS that??"
 
     assert result["msg"] == "Uh oh"
+
+
+def test_add_log_level():
+    add_logging_level("TRACE", 25)
+
+    stream = StringIO()
+    cazoo_logger.config(stream)
+    logger = cazoo_logger.empty()
+
+    logger.trace("This is a new level log")
+    result = json.loads(stream.getvalue())
+    print(json.dumps(result))
+
+    # CLEAN UP THE NEW LOG LEVEL SO IT DOESN'T LEAK INTO OTHER TESTS
+    delattr(logging, "TRACE")
+
+    assert result["level"] == "trace"
+
+
+def test_new_log_level_not_logged_if_logging_turned_too_high():
+    # Given that the default log level is INFO
+
+    # When a new logging level with a lower value is added
+    add_logging_level("TRACE", 15)
+
+    stream = StringIO()
+    cazoo_logger.config(stream)
+    logger = cazoo_logger.empty()
+
+    # And we log to this new level
+    logger.trace("This is a new level log")
+
+    # Then nothing is logged
+    result = stream.getvalue()
+
+    # CLEAN UP THE NEW LOG LEVEL SO IT DOESN'T LEAK INTO OTHER TESTS
+    delattr(logging, "TRACE")
+
+    assert result == ""

@@ -18,7 +18,6 @@ as a failure
 
 import functools
 import os
-from typing import Union
 
 from . import config, cloudwatch, empty
 from .contexts import CloudwatchContext, ContextualAdapter
@@ -30,15 +29,17 @@ class LoggerProvider:
     handler decorator is fired, and so we want to ensure that the logger is reset each
     time.
     """
+
     logger = None
 
     @staticmethod
-    def init_logger(event, context, context_type) -> [CloudwatchContext,
-                                                      ContextualAdapter]:
-        config(level=os.environ.get('LOG_LEVEL', 'INFO'))
-        if context_type == 'cloudwatch':
+    def init_logger(
+        event, context, context_type
+    ) -> [CloudwatchContext, ContextualAdapter]:
+        config(level=os.environ.get("LOG_LEVEL", "INFO"))
+        if context_type == "cloudwatch":
             LoggerProvider.logger = cloudwatch(event, context)
-        elif context_type == 'empty':
+        elif context_type == "empty":
             LoggerProvider.logger = empty()
         else:
             raise Exception("Invalid context type {0}".format(context_type))
@@ -57,22 +58,22 @@ def exception_logger(context_type, has_pii=False):
     :param has_pii: Flag to disable blanket event login for cases where events hold
                     pii data that cannot be logged to cloudwatch
     """
+
     def log_decorator(handler):
         @functools.wraps(handler)
         def exception_handler(event, context):
             log = LoggerProvider.init_logger(event, context, context_type=context_type)
             if not has_pii:
-                log.info("Logging event data",
-                         extra={"event": event})
+                log.info("Logging event data", extra={"event": event})
             try:
                 return handler(event, context, log)
             except Exception:
                 extra = {}
                 if not has_pii:
                     extra["event"] = event
-                log.exception("Unhandled exception in Lambda",
-                              extra=extra)
+                log.exception("Unhandled exception in Lambda", extra=extra)
                 raise
 
         return exception_handler
+
     return log_decorator

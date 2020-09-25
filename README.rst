@@ -1,7 +1,7 @@
 Intro, in which opinions are had
 --------------------------------
 
-Cazoo-Logger is a deeply opinionated structured logger for Python on AWS Lambda, intended as a stopgap for those poor recalcitrant souls who persist in writing Python instead of GETTING WITH THE GOD DAMNED PROGRAMME and writing Typescript, thereby benefitting from the glory of the One True Logging Library, `cazoo logger`_.
+Cazoo-Logger is a deeply opinionated structured logger for Python on AWS Lambda.
 
 Cazoo-Logger owes a debt to `aws_lambda_logger`_ which is both less opinionated, and probaby better suited to your particular use-case than this library. Go check it out.
 
@@ -85,3 +85,9 @@ Similarly you might want to add more data to the context section of your log eve
 
 .. _cazoo logger: https://www.npmjs.com/package/cazoo-logger
 .. _aws_lambda_logger: https://pypi.org/project/aws-lambda-logging
+
+Additional Log Levels
+---------------------
+The add_logging_level function allows you to add custom log levels to the logger.
+So for example a level of "TRACE" could be added at 15 to provide a level of logging is
+between DEBUG and INFO.

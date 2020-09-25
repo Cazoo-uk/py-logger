@@ -2,12 +2,13 @@ import logging
 from ._version import get_versions
 from .formatters import JsonFormatter
 from . import contexts
+from .logging_levels import add_logging_level
 from collections import ChainMap
 
 __version__ = get_versions()["version"]
 del get_versions
 
-__all__ = ["empty", "s3", "cloudwatch", "config"]
+__all__ = ["empty", "s3", "cloudwatch", "config", "add_logging_level"]
 
 
 def s3(event, context, service=None):

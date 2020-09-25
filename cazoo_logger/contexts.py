@@ -47,7 +47,7 @@ class LambdaContext(ContextualAdapter):
             default["context"]["function"]["service"] = service
         default["context"].update(data)
         if service is not None:
-            default['context']['function']['service'] = service
+            default["context"]["function"]["service"] = service
         super().__init__(logger, ChainMap(default))
 
 
