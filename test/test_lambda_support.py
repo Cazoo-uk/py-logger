@@ -9,6 +9,8 @@ from cazoo_logger import lambda_support as ls
 from . import LambdaContext
 from pytest import raises
 
+from test.pii_cleaner import find_and_clean_pii
+
 
 def test_invalid_context_fails():
     event = {"My Fake Event": "data"}
@@ -73,3 +75,58 @@ def test_add_logging_level():
     assert result["msg"] == "Logging a test message"
     assert result["data"]["vrm"] == "LP12 KZM"
     assert result["level"] == "trace"
+
+
+def test_handler_logger_removes_pii():
+    event = {"source": "test_event", "detail-type": "test event", "id": "12345"}
+
+    request_id = "abc-123"
+    function_name = "testing-the-decorator"
+    function_version = "brand-new"
+
+    ctx = LambdaContext(request_id, function_name, function_version)
+    stream = StringIO()
+
+    @ls.handler_logger("cloudwatch", prelog_hook=find_and_clean_pii)
+    def handler(event, context, logger):
+        cazoo_logger.config(stream)
+        logger.info(
+            "Logging a test message",
+            extra={"vrm": "LP12 KZM", "email_address": "me@email.com"},
+        )
+
+        return "Hello world"
+
+    assert handler(event, ctx) == "Hello world"
+
+    result = json.loads(stream.getvalue())
+    assert result["msg"] == "Logging a test message"
+    assert result["data"]["vrm"] == "LP12 KZM"
+    assert result["level"] == "info"
+    assert result["data"] == {"vrm": "LP12 KZM", "email_address": "PII REMOVED"}
+
+
+def test_handler_logger_removes_pii_empty():
+    event = {"source": "test_event", "detail-type": "test event", "id": "12345"}
+
+    request_id = "abc-123"
+    function_name = "testing-the-decorator"
+    function_version = "brand-new"
+
+    ctx = LambdaContext(request_id, function_name, function_version)
+    stream = StringIO()
+
+    @ls.handler_logger("empty", prelog_hook=find_and_clean_pii)
+    def handler(event, context, logger):
+        cazoo_logger.config(stream)
+        logger.info(
+            "Logging a test message",
+            extra={"vrm": "LP12 KZM", "email_address": "me@email.com"},
+        )
+
+        return "Hello world"
+
+    assert handler(event, ctx) == "Hello world"
+
+    result = json.loads(stream.getvalue())
+    assert result["data"] == {"vrm": "LP12 KZM", "email_address": "PII REMOVED"}
