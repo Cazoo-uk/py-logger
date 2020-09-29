@@ -1,0 +1,30 @@
+default_stages: [commit]
+repos:
+  - repo: https://github.com/psf/black
+    rev: 19.10b0
+    hooks:
+      - id: black
+        language_version: python3.7
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+        stages: [commit, push]
+      - id: debug-statements
+
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.7.9
+    hooks:
+      - id: flake8
+
+  - repo: local
+    hooks:
+      - id: run-tests
+        name: Run tests
+        entry: ./bin/run-tests.sh
+        language: script
+        pass_filenames: false
+        stages: [push]

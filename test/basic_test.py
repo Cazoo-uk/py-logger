@@ -67,7 +67,7 @@ def test_exceptions():
 
     try:
         raise ValueError("What even IS that??")
-    except:
+    except:  # noqa: E722
         logger.exception("Uh oh")
 
     result = json.loads(stream.getvalue())

@@ -5,7 +5,10 @@ from collections import ChainMap
 class ContextualAdapter(logging.LoggerAdapter):
     def __init__(self, logger, data=None, prelog_hook=None):
         self.context = data
-        self.prelog_hook = prelog_hook
+        if prelog_hook is None or callable(prelog_hook):
+            self.prelog_hook = prelog_hook
+        else:
+            raise TypeError("Supplied prelog_hook is not a callable")
         super().__init__(logger, data)
 
     def with_context(self, **ctx):

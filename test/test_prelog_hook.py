@@ -1,10 +1,9 @@
 import json
-import logging
 from io import StringIO
 
 import cazoo_logger
-from cazoo_logger import cloudwatch
 from test.pii_cleaner import find_and_clean_pii
+import pytest
 
 
 def test_standard_pii_removal():
@@ -44,9 +43,12 @@ def test_data():
 
     logger = cazoo_logger.empty(prelog_hook=find_and_clean_pii)
     logger.with_data(
-        sql={"query": "select * from foo where bar = ?", "parameters": [123],
-             "email_address": "me@email.com",
-             "first_name": "martin"}
+        sql={
+            "query": "select * from foo where bar = ?",
+            "parameters": [123],
+            "email_address": "me@email.com",
+            "first_name": "martin",
+        }
     ).info("Hello world")
 
     result = json.loads(stream.getvalue())
@@ -55,3 +57,10 @@ def test_data():
     assert result["data"]["sql"]["parameters"] == [123]
     assert result["data"]["sql"]["email_address"] == "PII REMOVED"
     assert result["data"]["sql"]["first_name"] == "PII REMOVED"
+
+
+def test_error_on_non_callable():
+    cazoo_logger.config()
+
+    with pytest.raises(TypeError):
+        cazoo_logger.empty(prelog_hook="a string")
