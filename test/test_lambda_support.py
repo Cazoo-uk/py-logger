@@ -9,7 +9,7 @@ from cazoo_logger import lambda_support as ls
 from . import LambdaContext
 from pytest import raises
 
-from test.pii_cleaner import find_and_clean_pii
+from test.pii_cleaner import PiiFilter
 
 
 def test_invalid_context_fails():
@@ -77,7 +77,7 @@ def test_add_logging_level():
     assert result["level"] == "trace"
 
 
-def test_handler_logger_removes_pii():
+def test_handler_logger_with_filter():
     event = {"source": "test_event", "detail-type": "test event", "id": "12345"}
 
     request_id = "abc-123"
@@ -87,7 +87,7 @@ def test_handler_logger_removes_pii():
     ctx = LambdaContext(request_id, function_name, function_version)
     stream = StringIO()
 
-    @ls.handler_logger("cloudwatch", prelog_hook=find_and_clean_pii)
+    @ls.handler_logger("cloudwatch", log_filter=PiiFilter)
     def handler(event, context, logger):
         cazoo_logger.config(stream)
         logger.info(
@@ -116,7 +116,7 @@ def test_handler_logger_removes_pii_empty():
     ctx = LambdaContext(request_id, function_name, function_version)
     stream = StringIO()
 
-    @ls.handler_logger("empty", prelog_hook=find_and_clean_pii)
+    @ls.handler_logger("empty", log_filter=PiiFilter)
     def handler(event, context, logger):
         cazoo_logger.config(stream)
         logger.info(

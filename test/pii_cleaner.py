@@ -1,3 +1,4 @@
+import logging
 from copy import deepcopy
 
 PII_FIELDS = [
@@ -31,9 +32,8 @@ PII_FIELDS = [
 ]
 
 
-def find_and_clean_pii(event: dict) -> dict:
+def find_and_clean_pii(event) -> dict:
     event_copy = deepcopy(event)
-
     if isinstance(event, dict):
         for k, v in event_copy.items():
             if isinstance(v, dict):
@@ -43,5 +43,12 @@ def find_and_clean_pii(event: dict) -> dict:
             else:
                 if k in PII_FIELDS:
                     event_copy[k] = "PII REMOVED"
-        return event_copy
-    return event
+    return event_copy
+
+
+class PiiFilter(logging.Filter):
+    def filter(self, record) -> True:
+        event = record.__dict__
+        for item in event:
+            event[item] = find_and_clean_pii(event[item])
+        return True

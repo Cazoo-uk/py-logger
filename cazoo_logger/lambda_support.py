@@ -41,14 +41,14 @@ class LoggerProvider:
 
     @staticmethod
     def init_logger(
-        event, context, context_type, prelog_hook=None
+        event, context, context_type
     ) -> [CloudwatchContext, ContextualAdapter]:
 
         config(level=os.environ.get("LOG_LEVEL", "INFO"))
         if context_type == "cloudwatch":
-            LoggerProvider.logger = cloudwatch(event, context, prelog_hook=prelog_hook)
+            LoggerProvider.logger = cloudwatch(event, context)
         elif context_type == "empty":
-            LoggerProvider.logger = empty(prelog_hook=prelog_hook)
+            LoggerProvider.logger = empty()
         else:
             raise Exception("Invalid context type {0}".format(context_type))
         return LoggerProvider.logger
@@ -87,22 +87,21 @@ def exception_logger(context_type, has_pii=False):
     return log_decorator
 
 
-def handler_logger(context_type, prelog_hook=None):
+def handler_logger(context_type, log_filter=None):
     """
     Decorator for the Lambda handler that will instantiate the logger and log initial
     event state data.
     :param context_type: The context of the incoming cloudwatch event.
-    :param prelog_hook: An optional function that will be used to scrub all logged
-                        fields of any PII. NB this does NOT apply to the log message
-                        itself
+    :param log_filter: An optional LogFilter that will allow log data to be pre-cleaned
+                       e.g. to remove PII
     """
 
     def log_decorator(handler):
         @functools.wraps(handler)
         def exception_handler(event, context):
-            log = LoggerProvider.init_logger(
-                event, context, context_type=context_type, prelog_hook=prelog_hook
-            )
+            log = LoggerProvider.init_logger(event, context, context_type=context_type)
+            if log_filter:
+                log.addFilter(log_filter())
             log.info("Logging event data", extra={"event": event})
             try:
                 return handler(event, context, log)
