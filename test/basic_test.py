@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from io import StringIO
 
 import cazoo_logger
@@ -98,12 +99,12 @@ def test_add_log_level():
 
 def test_new_log_level_not_logged_if_logging_turned_too_high():
     # Given that the default log level is INFO
-
+    os.environ["LOG_LEVEL"] = "INFO"
     # When a new logging level with a lower value is added
     add_logging_level("TRACE", 15)
 
     stream = StringIO()
-    cazoo_logger.config(stream)
+    cazoo_logger.config(stream, level=os.environ["LOG_LEVEL"])
     logger = cazoo_logger.empty()
 
     # And we log to this new level

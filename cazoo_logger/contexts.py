@@ -29,8 +29,6 @@ class ContextualAdapter(logging.LoggerAdapter):
         if "type" in kwargs:
             kwargs["extra"]["type"] = kwargs.pop("type")
 
-        kwargs["extra"] = kwargs["extra"]
-
         return msg, kwargs
 
     def addFilter(self, filter):
