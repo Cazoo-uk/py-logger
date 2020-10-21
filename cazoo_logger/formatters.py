@@ -3,7 +3,7 @@ import logging
 
 
 def json_formatter(obj):
-    "request_id"
+    """request_id"""
     return str(obj)
 
 
@@ -40,7 +40,7 @@ class JsonFormatter(logging.Formatter):
                 "stack": self.formatException(record.exc_info),
             }
 
-            if not "data" in log_dict:
+            if "data" not in log_dict:
                 log_dict["data"] = {"error": err}
             else:
                 log_dict["data"]["error"] = err

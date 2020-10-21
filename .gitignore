@@ -7,7 +7,6 @@ env
 *.egg-info
 .idea
 *.log
-*config.yaml
 build/
 dist/
 api_logs/

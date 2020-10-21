@@ -1,5 +1,4 @@
 import json
-import logging
 from io import StringIO
 
 import cazoo_logger
@@ -34,7 +33,11 @@ def test_cloudwatch_context():
 
     assert result["context"] == {
         "request_id": request_id,
-        "function": {"name": function_name, "version": function_version, "service": "best-service-ever"},
+        "function": {
+            "name": function_name,
+            "version": function_version,
+            "service": "best-service-ever",
+        },
         "event": {"source": "aws.events", "name": "Scheduled Event", "id": event["id"]},
     }
 
