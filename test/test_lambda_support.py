@@ -130,3 +130,38 @@ def test_handler_logger_removes_pii_empty():
 
     result = json.loads(stream.getvalue())
     assert result["data"] == {"vrm": "LP12 KZM", "email_address": "PII REMOVED"}
+
+
+def test_decorated_function_with_s3_creates_logs():
+    event = {
+        "Records": [
+            {
+                "Sns": {
+                    "MessageId": "123",
+                    "Type": "Notification",
+                    "TopicArn": "arn:aws:sns:1",
+                    "Subject": "Amazon S3 Notification",
+                }
+            }
+        ]
+    }
+
+    request_id = "abc-123"
+    function_name = "testing-the-decorator"
+    function_version = "brand-new"
+
+    ctx = LambdaContext(request_id, function_name, function_version)
+    stream = StringIO()
+
+    @ls.handler_logger("s3")
+    def handler(event, context, logger):
+        cazoo_logger.config(stream)
+        logger.info("Logging a test message", extra={"vrm": "LP12 KZM"})
+        return "Hello world"
+
+    assert handler(event, ctx) == "Hello world"
+
+    result = json.loads(stream.getvalue())
+    assert result["msg"] == "Logging a test message"
+    assert result["data"]["vrm"] == "LP12 KZM"
+    assert result["level"] == "info"

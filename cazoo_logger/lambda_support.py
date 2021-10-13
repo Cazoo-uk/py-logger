@@ -27,7 +27,7 @@ import functools
 from typing import Union
 import os
 
-from . import config, cloudwatch, empty
+from . import config, cloudwatch, empty, s3
 from .contexts import CloudwatchContext, ContextualAdapter
 
 
@@ -48,6 +48,8 @@ class LoggerProvider:
         config(level=os.environ.get("LOG_LEVEL", "INFO"))
         if context_type == "cloudwatch":
             LoggerProvider.logger = cloudwatch(event, context)
+        elif context_type == "s3":
+            LoggerProvider.logger = s3(event, context)
         elif context_type == "empty":
             LoggerProvider.logger = empty()
         else:
