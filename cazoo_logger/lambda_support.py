@@ -28,7 +28,7 @@ from typing import Union
 import os
 
 from . import config, cloudwatch, empty, s3
-from .contexts import CloudwatchContext, ContextualAdapter
+from .contexts import CloudwatchContext, ContextualAdapter, S3SnsContext
 
 
 class LoggerProvider:
@@ -43,7 +43,7 @@ class LoggerProvider:
     @staticmethod
     def init_logger(
         event, context, context_type
-    ) -> Union[CloudwatchContext, ContextualAdapter]:
+    ) -> Union[CloudwatchContext, S3SnsContext, ContextualAdapter]:
 
         config(level=os.environ.get("LOG_LEVEL", "INFO"))
         if context_type == "cloudwatch":
@@ -57,7 +57,7 @@ class LoggerProvider:
         return LoggerProvider.logger
 
     @staticmethod
-    def get_logger() -> Union[CloudwatchContext, ContextualAdapter]:
+    def get_logger() -> Union[CloudwatchContext, S3SnsContext, ContextualAdapter]:
         return LoggerProvider.logger
 
 
