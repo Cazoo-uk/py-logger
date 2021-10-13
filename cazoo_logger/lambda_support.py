@@ -24,6 +24,7 @@ e.g. this can be used to remove any PII that is accidentally logged
 """
 
 import functools
+from typing import Union
 import os
 
 from . import config, cloudwatch, empty
@@ -42,7 +43,7 @@ class LoggerProvider:
     @staticmethod
     def init_logger(
         event, context, context_type
-    ) -> [CloudwatchContext, ContextualAdapter]:
+    ) -> Union[CloudwatchContext, ContextualAdapter]:
 
         config(level=os.environ.get("LOG_LEVEL", "INFO"))
         if context_type == "cloudwatch":
@@ -54,7 +55,7 @@ class LoggerProvider:
         return LoggerProvider.logger
 
     @staticmethod
-    def get_logger() -> [CloudwatchContext, ContextualAdapter]:
+    def get_logger() -> Union[CloudwatchContext, ContextualAdapter]:
         return LoggerProvider.logger
 
 
