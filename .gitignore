@@ -14,3 +14,5 @@ api_logs/
 docker-files/base/root/opt
 .venv
 src/src
+.python-version
+.vscode/
