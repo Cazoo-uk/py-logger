@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cazoo-logger
+  description: Opinionated structured logger for Python on AWS Lambda
+  tags:
+    - python
+spec:
+  type: library
+  lifecycle: production
+  owner: group:developer-experience
